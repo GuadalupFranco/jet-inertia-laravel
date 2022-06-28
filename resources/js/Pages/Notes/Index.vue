@@ -1,10 +1,17 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import { Inertia } from '@inertiajs/inertia';
 import { Link } from '@inertiajs/inertia-vue3';
 
 defineProps({
     notes: Array,
 });
+
+function destroy(id) {
+    if (confirm('do you want to delete it?')){
+        Inertia.delete(route('notes.destroy', id))
+    }
+}
 </script>
 
 <template>
@@ -33,7 +40,7 @@ defineProps({
                                 class="bg-blue-500 text-white font-bold py-2 px-4 rounded-md">
                                 Create
                             </Link>
-                            <table>
+                            <table class="mt-5">
                                 <tr v-for="(note, index) in notes" :key="index">
                                     <td class="border px-4 py-2">
                                         {{ note.excerpt }}
@@ -49,7 +56,7 @@ defineProps({
                                         </Link>
                                     </td>
                                     <td class="px-4 py-2">
-                                        <Link :href="route('notes.destroy', note)">
+                                        <Link href="#" @click.prevent="destroy(note.id)">
                                             Remove
                                         </Link>
                                     </td>
