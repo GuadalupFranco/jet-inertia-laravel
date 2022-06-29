@@ -2,10 +2,18 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Inertia } from '@inertiajs/inertia';
 import { Link } from '@inertiajs/inertia-vue3';
+import { ref } from 'vue';
 
 defineProps({
     notes: Array,
 });
+
+const val = ref(null);
+
+const searchNote = () => { 
+    let q = val.value;
+    Inertia.get(route('notes.index', {q}), {}, {preserveState: true});
+};
 
 function destroy(id) {
     if (confirm('do you want to delete it?')){
@@ -35,11 +43,18 @@ function destroy(id) {
                     </div>
                     <div class="md:col-span-2 mt-5 md:mt-0">
                         <div class="shadow bg-white md:rounded-md p-4">
-                            <Link 
-                                :href="route('notes.create')" 
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded-md">
-                                Create
-                            </Link>
+                            <div class="flex justify-between">
+                                <input type="text" 
+                                    class="form-input rounded-md shadow-sm"
+                                    placeholder="Search..."
+                                    v-model="val" @keyup="searchNote()">
+                                <Link 
+                                    :href="route('notes.create')" 
+                                    class="bg-blue-500 text-white font-bold py-2 px-4 rounded-md">
+                                    Create
+                                </Link>
+                            </div>
+                            
                             <table class="mt-5">
                                 <tr v-for="(note, index) in notes" :key="index">
                                     <td class="border px-4 py-2">
